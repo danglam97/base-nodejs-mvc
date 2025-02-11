@@ -11,8 +11,11 @@ const methodOverride = require("method-override");
 
 const bodyParser = require("body-parser");
 
-require("./config/db");
+// Kết nối đến db
+const connectDB = require("./config/mongoDB");
+ connectDB()
 
+// require('./config/db')
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -37,9 +40,6 @@ app.set("views", path.join(__dirname, "views"));
 const userRoutes = require('./routes/userRoutes')
 app.use("/users", userRoutes);
 
-// gọi route sản phẩm
-const productRoute = require('./routes/productRoute')
-app.use('/san-pham',productRoute)
 
 
 
