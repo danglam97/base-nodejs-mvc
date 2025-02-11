@@ -12,6 +12,7 @@ Dự án này là một ứng dụng Node.js sử dụng mô hình MVC (Model-Vi
 - express
 - method-override
 - nodemon
+- mongoose
 
 ## Cài đặt dự án
 - git clone <url_repository>
@@ -25,3 +26,4 @@ Dự án này là một ứng dụng Node.js sử dụng mô hình MVC (Model-Vi
 - DB_PASSWORD=your_password
 - DB_NAME=your_database_name
 - DB_PORT = 3306
+- MONGO_URI = mongodb://localhost:27017/(your_database_name)
