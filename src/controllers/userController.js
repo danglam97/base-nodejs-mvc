@@ -3,10 +3,41 @@ const User = require("../models/userModel");
 // 🔹 Lấy danh sách user
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(500).json({ message: "Lỗi server", error });
+    const page = parseInt(req.query.page) || 1;  // Trang hiện tại
+    const limit = parseInt(req.query.limit) || 10; // Số sản phẩm mỗi trang
+    const search = req.query.search || ""; // Từ khóa tìm kiếm
+
+    // Điều kiện tìm kiếm theo tên sản phẩm (không phân biệt hoa thường)
+    const query = search ? { name: { $regex: search, $options: "i" } } : {};
+
+    const options = {
+      page,
+      limit,
+      sort: { createdAt: -1 }, // Sắp xếp mới nhất trước
+    };
+
+    const products = await User.paginate(query, options);
+
+    res.json({
+      status: "success",
+      message: "Lấy danh sách user thành công",
+      data: {
+        products: products.docs,
+        pagination: {
+          totalItems: products.totalDocs,
+          totalPages: products.totalPages,
+          currentPage: products.page,
+          hasNextPage: products.hasNextPage,
+          hasPrevPage: products.hasPrevPage,
+        },
+      },
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: "Lỗi server",
+      error: err.message,
+    });
   }
 };
 
