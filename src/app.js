@@ -39,9 +39,8 @@ app.set("views", path.join(__dirname, "views"));
 // import Routes
 const userRoutes = require('./routes/userRoutes')
 app.use("/users", userRoutes);
-
-
-
+const loginRoute = require('./routes/login/loginRoute');
+app.use('/login',loginRoute)
 
 
 

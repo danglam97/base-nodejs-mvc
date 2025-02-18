@@ -1,3 +1,6 @@
+// import thư viện mã hóa password
+const bcrypt = require("bcryptjs");
+
 const User = require("../models/userModel");
 const userValidation = require('../validator/users/userValidator');
 // 🔹 Lấy danh sách user
@@ -60,14 +63,17 @@ exports.createUser = async (req, res) => {
     if (error) {
       return res.status(400).json({ errors: error.details.map(err => err.message) });
     }
+    const { name, email, password } = req.body;
+
     // Kiểm tra email đã tồn tại chưa
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
     }
+    // mã hóa pass
+    const hashedPassword = await bcrypt.hash(password,10);
 
-    const { name, email, age } = req.body;
-    const newUser = new User({ name, email, age });
+    const newUser = new User({ name, email, password: hashedPassword });
     await newUser.save();
     res.status(201).json({ message: "User được tạo", newUser });
   } catch (error) {
