@@ -13,6 +13,7 @@ Dự án này là một ứng dụng Node.js sử dụng mô hình MVC (Model-Vi
 - method-override
 - nodemon
 - mongoose
+- joi
 
 ## Cài đặt dự án
 - git clone <url_repository>

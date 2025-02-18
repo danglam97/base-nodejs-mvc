@@ -1,5 +1,5 @@
 const User = require("../models/userModel");
-
+const userValidation = require('../validator/users/userValidator');
 // 🔹 Lấy danh sách user
 exports.getUsers = async (req, res) => {
   try {
@@ -55,11 +55,23 @@ exports.getUserById = async (req, res) => {
 // 🔹 Thêm user mới
 exports.createUser = async (req, res) => {
   try {
+    // Validate dữ liệu đầu vào
+    const { error } = userValidation.validate(req.body, { abortEarly: false });
+    if (error) {
+      return res.status(400).json({ errors: error.details.map(err => err.message) });
+    }
+    // Kiểm tra email đã tồn tại chưa
+    const existingUser = await User.findOne({ email: req.body.email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already exists" });
+    }
+
     const { name, email, age } = req.body;
     const newUser = new User({ name, email, age });
     await newUser.save();
     res.status(201).json({ message: "User được tạo", newUser });
   } catch (error) {
+    console.log(error)
     res.status(400).json({ message: "Không thể tạo user", error });
   }
 };
